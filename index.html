@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소담이 코칭</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap');
+
+:root {
+  --amber:#BA7517; --amber-l:#FAEEDA; --amber-m:#FAC775;
+  --amber-d:#854F0B; --amber-dp:#633806;
+  --green-bg:#EAF3DE; --green-bd:#C0DD97; --green-t:#27500A;
+  --blue-bg:#E6F1FB; --blue-bd:#B5D4F4; --blue-t:#0C447C;
+  --teal-bg:#E1F5EE; --teal-bd:#9FE1CB; --teal-t:#085041;
+  --bg:#FFFDF8; --card:#fff; --text:#2C2C2A;
+  --muted:#5F5E5A; --hint:#888780; --border:rgba(0,0,0,0.09);
+  --r:18px; --rsm:12px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+.header{background:var(--amber);padding:14px 20px;display:flex;align-items:center;gap:10px}
+.hicon{font-size:24px}
+.htitle{font-size:17px;font-weight:700;color:#fff}
+.hsub{font-size:12px;color:rgba(255,255,255,.75)}
+
+.wrap{max-width:540px;margin:0 auto;padding:24px 16px 80px}
+
+.screen{display:none}
+.screen.on{display:block}
+
+.dots-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:22px}
+.sd{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .2s}
+.sd.done{background:var(--amber-m)}
+.sd.cur{background:var(--amber);width:22px;border-radius:4px}
+
+.stag{display:inline-block;font-size:12px;font-weight:700;color:var(--amber-d);background:var(--amber-l);padding:4px 12px;border-radius:20px;margin-bottom:10px}
+.stitle{font-size:21px;font-weight:700;line-height:1.4;margin-bottom:6px}
+.sdesc{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:22px}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.clabel{font-size:13px;font-weight:500;color:var(--muted);margin-bottom:10px}
+
+input[type=text],textarea{width:100%;padding:13px 14px;font-size:17px;font-family:'Noto Sans KR',sans-serif;border:1.5px solid var(--border);border-radius:var(--rsm);background:#fafaf8;color:var(--text);transition:border .15s}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--amber);background:#fff}
+textarea{min-height:110px;resize:vertical;line-height:1.8}
+.cntrow{display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:var(--hint)}
+
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.vtag{padding:13px 4px;border-radius:var(--rsm);border:1.5px solid var(--border);font-size:15px;font-weight:500;font-family:'Noto Sans KR',sans-serif;cursor:pointer;background:#fafaf8;color:var(--text);transition:all .15s;text-align:center}
+.vtag:hover{border-color:var(--amber-m);background:var(--amber-l)}
+.vtag.sel{background:var(--amber-l);border-color:var(--amber);color:var(--amber-d)}
+
+.artist-card{background:var(--card);border-radius:24px;overflow:hidden;margin-bottom:14px;animation:fadeUp .5s ease;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
+.artist-header{padding:22px 20px 18px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.artist-header::after{content:'';position:absolute;right:-10px;top:-10px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.12)}
+.artist-big-emoji{font-size:52px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));flex-shrink:0}
+.artist-name-wrap{}
+.artist-virtue-badge{display:inline-block;font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:20px;margin-bottom:5px;letter-spacing:1px}
+.artist-name-big{font-size:22px;font-weight:700;color:#fff;line-height:1.2}
+.artist-subtitle{font-size:13px;color:rgba(255,255,255,0.8);margin-top:3px}
+
+.story-body{padding:0}
+.story-scene{padding:18px 20px;border-bottom:1px solid rgba(0,0,0,0.05);position:relative}
+.story-scene:last-of-type{border-bottom:none}
+.scene-emoji-row{font-size:28px;margin-bottom:10px;line-height:1}
+.scene-text{font-family:'Noto Serif KR',serif;font-size:16px;line-height:2.0;color:var(--text);word-break:keep-all}
+.scene-text strong{color:var(--artist-color,#BA7517)}
+.scene-quote{margin:12px 0;padding:12px 16px;border-left:3px solid var(--artist-color,#BA7517);background:var(--artist-bg,#FAEEDA);border-radius:0 10px 10px 0;font-family:'Noto Serif KR',serif;font-size:15px;font-style:italic;color:var(--artist-dark,#633806);line-height:1.8}
+
+.question-box{border-radius:16px;padding:16px 18px;margin:0 0 0 0}
+.question-label{font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.question-text{font-size:15px;font-weight:600;line-height:1.7;margin-bottom:12px}
+.question-answer{width:100%;padding:10px 12px;font-size:15px;font-family:'Noto Sans KR',sans-serif;border:1.5px solid rgba(0,0,0,0.12);border-radius:10px;background:rgba(255,255,255,0.7);color:var(--text);resize:none;min-height:70px;line-height:1.7;transition:border .15s;margin-top:4px}
+.question-answer:focus{outline:none;border-color:var(--artist-color,#BA7517);background:#fff}
+.question-answer::placeholder{color:#B0ADA4;font-size:14px}
+
+.decl-card-wrap{background:linear-gradient(135deg,#FFF8E7 0%,#FFF0D6 100%);border:2px solid var(--amber-m);border-radius:20px;padding:24px 20px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
+.decl-card-wrap::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:var(--amber-m);opacity:.15;border-radius:50%}
+.decl-card-deco{font-size:28px;margin-bottom:6px}
+.decl-card-virtue{font-size:12px;font-weight:700;color:var(--amber-d);letter-spacing:2px;margin-bottom:4px}
+.decl-card-artist{font-size:13px;color:var(--amber);margin-bottom:14px}
+.decl-card-name{font-size:15px;font-weight:700;color:var(--amber-dp);margin-bottom:8px}
+.decl-card-text{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:var(--text);line-height:1.8;margin-bottom:14px;word-break:keep-all}
+.decl-card-date{font-size:12px;color:var(--hint)}
+.btn-save{width:100%;padding:14px;font-size:16px;font-weight:700;font-family:'Noto Sans KR',sans-serif;border-radius:var(--r);border:none;cursor:pointer;background:linear-gradient(135deg,#E8A020,var(--amber-d));color:#fff;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px}
+
+.starwrap{text-align:center;padding:6px 0 4px}
+.stars{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+.star{font-size:38px;cursor:pointer;color:#D3D1C7;background:none;border:none;padding:4px;transition:all .12s;line-height:1}
+.star.lit{color:var(--amber-m)}
+.star:hover{transform:scale(1.12)}
+.starlabel{font-size:15px;font-weight:500;color:var(--amber-d);min-height:22px}
+
+.btn{width:100%;padding:16px;font-size:17px;font-weight:700;font-family:'Noto Sans KR',sans-serif;border-radius:var(--r);border:none;cursor:pointer;background:var(--amber);color:#fff;transition:all .15s;margin-top:4px}
+.btn:hover:not(:disabled){background:var(--amber-d)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{width:100%;padding:13px;font-size:15px;font-family:'Noto Sans KR',sans-serif;border-radius:var(--rsm);border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;margin-top:10px}
+.btn-ghost:hover{background:#f0efe9}
+
+.loading{text-align:center;padding:40px 0}
+.lmsg{font-size:16px;color:var(--muted);margin-bottom:18px}
+.ldots{display:flex;gap:8px;justify-content:center}
+.ldot{width:10px;height:10px;border-radius:50%;background:var(--amber);animation:bop 1.2s ease infinite}
+.ldot:nth-child(2){animation-delay:.2s}
+.ldot:nth-child(3){animation-delay:.4s}
+@keyframes bop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-10px)}}
+
+.fbwrap{animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.vbadge{display:inline-flex;align-items:center;gap:6px;background:var(--amber-l);border:1px solid var(--amber-m);border-radius:20px;padding:5px 14px;font-size:14px;font-weight:700;color:var(--amber-d);margin-bottom:14px}
+.fbcard{border-radius:var(--r);padding:18px;margin-bottom:10px}
+.fbcard.praise{background:var(--green-bg);border:1px solid var(--green-bd)}
+.fbcard.improve{background:var(--blue-bg);border:1px solid var(--blue-bd)}
+.fbcard.hint{background:var(--teal-bg);border:1px solid var(--teal-bd)}
+.fbhead{font-size:14px;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.fbhead.praise{color:var(--green-t)}
+.fbhead.improve{color:var(--blue-t)}
+.fbhead.hint{color:var(--teal-t)}
+.fbbody{font-size:15px;line-height:1.85;white-space:pre-wrap}
+.fbbody.praise{color:var(--green-t)}
+.fbbody.improve{color:var(--blue-t)}
+.fbbody.hint{color:var(--teal-t)}
+
+.artist-signature{display:flex;align-items:center;gap:10px;background:var(--amber-l);border-radius:var(--rsm);padding:10px 14px;margin-bottom:14px}
+.sig-emoji{font-size:24px}
+.sig-text{font-size:13px;color:var(--amber-d);font-weight:500}
+.sig-name{font-size:15px;font-weight:700;color:var(--amber-dp)}
+
+.heart-sec{margin-top:26px}
+.heart-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:6px}
+.heart-desc{font-size:14px;color:var(--muted);text-align:center;line-height:1.65;margin-bottom:20px}
+.heart-outer{position:relative;width:100%;max-width:320px;margin:0 auto 10px}
+.heart-svg{width:100%;display:block}
+.heart-ta-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-46%);width:65%;text-align:center}
+.heart-ta{width:100%;background:transparent;border:none;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:#8B1A4A;text-align:center;resize:none;line-height:1.8;padding:0;min-height:90px;overflow:hidden}
+.heart-ta:focus{outline:none}
+.heart-ta::placeholder{color:#D48EA8;font-weight:400;font-size:14px}
+.heart-cnt{text-align:center;font-size:12px;color:var(--hint);margin-bottom:4px}
+
+.done-banner{background:var(--amber);border-radius:var(--r);padding:24px;text-align:center;color:#fff;margin-bottom:14px}
+.done-icon{font-size:48px;margin-bottom:10px}
+.done-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.done-sub{font-size:14px;opacity:.85}
+.sumbox{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.sumrow{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 16px;border-bottom:1px solid var(--border);font-size:14px;gap:12px}
+.sumrow:last-child{border:none}
+.sl{color:var(--muted);flex-shrink:0}
+.sv{color:var(--text);font-weight:500;text-align:right;line-height:1.6}
+.stars-sm{color:var(--amber-m);font-size:15px}
+.new-decl-row{background:var(--amber-l)}
+.new-decl-row .sl{color:var(--amber-d)}
+.new-decl-row .sv{color:var(--amber-d);font-weight:700}
+
+/* ── 역할극 추가 스타일 ── */
+.roleplay-banner{background:linear-gradient(135deg,#FFF8E0,#FFEFC0);border:2px solid var(--amber-m);border-radius:20px;padding:22px 20px;text-align:center;margin-bottom:16px}
+.rp-icon{font-size:44px;margin-bottom:8px}
+.rp-title{font-size:18px;font-weight:700;color:var(--amber-dp);margin-bottom:6px}
+.rp-desc{font-size:14px;color:var(--amber-d);line-height:1.7}
+
+.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.sc-btn{border:2px solid;border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:white;transition:opacity .15s}
+.sc-btn:hover{opacity:.85}
+.sc-btn-emoji{font-size:28px;margin-bottom:6px}
+.sc-btn-tag{font-size:11px;font-weight:700;margin-bottom:4px}
+.sc-btn-title{font-size:12px;font-weight:700;color:#333;line-height:1.4}
+
+/* 채팅 UI */
+.chat-screen{display:none;flex-direction:column;height:100vh;max-width:540px;margin:0 auto}
+.chat-screen.on{display:flex}
+.chat-header{background:var(--amber);padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.chat-back{background:rgba(255,255,255,.25);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600}
+.chat-header-info{flex:1}
+.chat-header-title{font-size:15px;font-weight:700;color:#fff}
+.chat-header-sub{font-size:12px;color:rgba(255,255,255,.8)}
+.chat-situation{margin:12px 16px 0;padding:10px 14px;border-radius:12px;border:1.5px solid;font-size:13px;color:#444;flex-shrink:0}
+.chat-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.friend-row{display:flex;gap:8px;align-items:flex-start}
+.friend-avatar{width:36px;height:36px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+.friend-name-lbl{font-size:11px;color:#aaa;margin-bottom:3px;font-weight:600}
+.friend-bubble{background:#fff;border-radius:4px 14px 14px 14px;padding:10px 13px;font-size:14px;color:#333;line-height:1.6;box-shadow:0 2px 6px rgba(0,0,0,0.08);max-width:260px}
+.user-row{display:flex;justify-content:flex-end}
+.user-bubble{background:var(--amber);color:#fff;border-radius:14px 4px 14px 14px;padding:10px 14px;font-size:14px;line-height:1.6;max-width:260px}
+.artist-fb-box{background:var(--amber-l);border:1.5px solid var(--amber-m);border-radius:14px;padding:12px 14px;margin-left:4px}
+.artist-fb-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.artist-fb-stars{display:flex;gap:2px}
+.artist-fb-text{font-size:13px;color:var(--amber-dp);line-height:1.7}
+.tip-pill{background:#FFF3C7;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--amber-d);margin-top:6px;font-weight:600;display:inline-block}
+.chat-input-area{background:#fff;padding:10px 14px 18px;box-shadow:0 -3px 14px rgba(0,0,0,0.07);flex-shrink:0}
+.chat-hint{font-size:12px;color:#aaa;margin-bottom:6px;font-weight:600}
+.chat-row{display:flex;gap:8px;align-items:flex-end}
+.chat-ta{flex:1;border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;font-size:14px;font-family:'Noto Sans KR',sans-serif;resize:none;outline:none;line-height:1.5}
+.chat-ta:focus{border-color:var(--amber)}
+.chat-send{background:var(--amber);color:#fff;border:none;border-radius:12px;padding:0 16px;height:44px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;flex-shrink:0}
+.resolved-box{background:#fff;border-radius:16px;padding:20px;text-align:center;border:2px solid var(--amber-m);margin:8px 16px}
+.loading-dots span{animation:dotblink 1.2s infinite;display:inline-block;font-size:18px;color:var(--amber)}
+.loading-dots span:nth-child(2){animation-delay:.2s}
+.loading-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dotblink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="hicon">🌱</div>
+  <div>
+    <div class="htitle">소담이 코칭</div>
+    <div class="hsub">덕목 선언문 &amp; 실천 피드백</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- STEP 1 -->
+  <div id="s1" class="screen on">
+    <div class="dots-row">
+      <div class="sd cur"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div>
+    </div>
+    <div class="stag">STEP 1</div>
+    <div class="stitle">안녕! 먼저 내 이름을 알려줘 😊</div>
+    <div class="sdesc">오늘 배운 덕목도 골라봐요.</div>
+    <div class="card">
+      <div class="clabel">내 이름</div>
+      <input type="text" id="nameIn" placeholder="예) 김민준" maxlength="10" oninput="chk1()">
+    </div>
+    <div class="card">
+      <div class="clabel">오늘의 덕목</div>
+      <div class="vgrid" id="vgrid"></div>
+    </div>
+    <button class="btn" id="btn1" disabled onclick="go(2)">다음으로 →</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="s2" class="screen">
+    <div class="dots-row">
+      <div class="sd done"></div><div class="sd cur"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div>
+    </div>
+    <div class="stag">STEP 2</div>
+    <div class="stitle" id="s2title">예술가 이야기 🎨</div>
+    <div class="sdesc" id="s2desc">이 예술가의 이야기를 읽고 생각해봐요.</div>
+    <div class="artist-card" id="artistCard">
+      <div class="artist-header" id="artistHeader">
+        <div class="artist-big-emoji" id="artistEmoji">🎨</div>
+        <div class="artist-name-wrap">
+          <div class="artist-virtue-badge" id="artistVirtueLabel"></div>
+          <div class="artist-name-big" id="artistNameLabel"></div>
+          <div class="artist-subtitle" id="artistSubtitle"></div>
+        </div>
+      </div>
+      <div class="story-body" id="storyBody"></div>
+      <div class="question-box" id="questionBox" style="margin:0 16px 16px">
+        <div class="question-label" id="questionLabel">💭 생각해봐요</div>
+        <div class="question-text" id="questionText"></div>
+        <textarea class="question-answer" id="questionAnswer" placeholder="내 생각을 자유롭게 써봐요..." maxlength="200"></textarea>
+      </div>
+    </div>
+    <button class="btn" id="btnS2" onclick="go(3)">선언문 쓰러 가기 ✏️</button>
+    <button class="btn-ghost" onclick="go(1)">← 이전</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="s3" class="screen">
+    <div class="dots-row">
+      <div class="sd done"></div><div class="sd done"></div><div class="sd cur"></div><div class="sd"></div><div class="sd"></div>
+    </div>
+    <div class="stag">STEP 3</div>
+    <div class="stitle" id="s3title">선언문을 써봐요 ✏️</div>
+    <div class="sdesc">앞으로 이 덕목을 어떻게 실천할지 나만의 선언문을 써봐요!</div>
+    <div class="card">
+      <div class="clabel">나의 선언문</div>
+      <textarea id="declIn" placeholder="나는 앞으로..." maxlength="300" oninput="chk3();cnt('declIn','dc')"></textarea>
+      <div class="cntrow"><span>솔직하게, 내 마음을 담아서 써봐요 ✏️</span><span><span id="dc">0</span>/300</span></div>
+    </div>
+
+    <!-- 힌트 영역 -->
+    <div id="hintArea" style="display:none;background:#FFFBEE;border:2px solid #FFE566;border-radius:16px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:700;color:#8B6914;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+        <span id="hintArtistEmoji"></span> <span id="hintArtistName"></span>이(가) 알려주는 힌트
+      </div>
+      <div id="hintLoading" style="text-align:center;padding:10px;color:#aaa;font-size:14px;">힌트를 만들고 있어요<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+      <div id="hintContent" style="display:none;"></div>
+    </div>
+
+    <button id="hintBtn" class="btn-ghost" onclick="getHint()" style="margin-bottom:4px;border-color:#FFE566;color:#8B6914;background:#FFFBEE;">
+      💡 어떻게 써야 할지 모르겠어요 (힌트 받기)
+    </button>
+    <button class="btn" id="btn3" disabled onclick="go(4)">다음으로 →</button>
+    <button class="btn-ghost" onclick="go(2)">← 이전</button>
+  </div>
+
+  <!-- STEP 4 -->
+  <div id="s4" class="screen">
+    <div class="dots-row">
+      <div class="sd done"></div><div class="sd done"></div><div class="sd done"></div><div class="sd cur"></div><div class="sd"></div>
+    </div>
+    <div class="stag">STEP 4</div>
+    <div class="stitle">이 선언문, 얼마나 자신 있어? ⭐</div>
+    <div class="sdesc">실천할 자신감을 별점으로 표현해봐요!</div>
+    <div class="card">
+      <div class="starwrap">
+        <div class="stars" id="starrow"></div>
+        <div class="starlabel" id="starlabel">별을 눌러봐요</div>
+      </div>
+    </div>
+    <button class="btn" id="btn4" disabled onclick="getFeedback()">피드백 받기 ✉️</button>
+    <button class="btn-ghost" onclick="go(3)">← 이전</button>
+  </div>
+
+  <!-- STEP 5 -->
+  <div id="s5" class="screen">
+    <div class="dots-row">
+      <div class="sd done"></div><div class="sd done"></div><div class="sd done"></div><div class="sd done"></div><div class="sd cur"></div>
+    </div>
+    <div id="loadArea" class="loading">
+      <div class="lmsg" id="lmsg">피드백을 만들고 있어요...</div>
+      <div class="ldots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>
+    </div>
+    <div id="fbArea" style="display:none">
+      <div class="artist-signature" id="artistSig">
+        <div class="sig-emoji" id="sigEmoji">🎨</div>
+        <div><div class="sig-name" id="sigName"></div></div>
+      </div>
+      <div class="fbwrap" id="fbwrap"></div>
+      <div class="heart-sec">
+        <div class="heart-title">💝 선언문을 고쳐 써봐요!</div>
+        <div class="heart-desc">피드백을 읽고 더 멋진 선언문으로 바꿔봐요.<br>하트 안에 새 선언문을 직접 써봐요.</div>
+        <div class="heart-outer">
+          <svg class="heart-svg" viewBox="0 0 320 290" xmlns="http://www.w3.org/2000/svg">
+            <defs><filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#E8789A" flood-opacity="0.22"/></filter></defs>
+            <path d="M160 258 C160 258 22 168 22 90 C22 52 50 28 84 28 C108 28 136 44 160 68 C184 44 212 28 236 28 C270 28 298 52 298 90 C298 168 160 258 160 258 Z" fill="#FFD6E4" stroke="#F0A0BC" stroke-width="1.5" filter="url(#sh)"/>
+            <path d="M160 242 C160 242 38 158 38 90 C38 60 62 44 86 44 C108 44 134 58 160 80 C186 58 212 44 234 44 C258 44 282 60 282 90 C282 158 160 242 160 242 Z" fill="#FFE8F0" opacity="0.55"/>
+            <ellipse cx="100" cy="72" rx="18" ry="10" fill="#fff" opacity="0.35" transform="rotate(-30,100,72)"/>
+          </svg>
+          <div class="heart-ta-wrap">
+            <textarea class="heart-ta" id="heartDecl" placeholder="나는 앞으로..." maxlength="120" oninput="cnt('heartDecl','hc');autoH(this)"></textarea>
+          </div>
+        </div>
+        <div class="heart-cnt"><span id="hc">0</span> / 120</div>
+      </div>
+      <button class="btn" onclick="finish()" style="margin-top:18px">완성! 🎉</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: 완성 -->
+  <div id="s6" class="screen">
+    <div class="done-banner">
+      <div class="done-icon">🎉</div>
+      <div class="done-title" id="doneTitle">정말 잘했어요!</div>
+      <div class="done-sub" id="doneSub">오늘의 선언문을 완성했어요</div>
+    </div>
+    <div class="decl-card-wrap" id="declCard">
+      <div class="decl-card-deco" id="cardEmoji">🌱</div>
+      <div class="decl-card-virtue" id="cardVirtue"></div>
+      <div class="decl-card-artist" id="cardArtist"></div>
+      <div class="decl-card-name" id="cardName"></div>
+      <div class="decl-card-text" id="cardDecl"></div>
+      <div class="decl-card-date" id="cardDate"></div>
+    </div>
+    <button class="btn-save" onclick="saveCard()">📸 선언문 카드 저장하기</button>
+    <div class="sumbox" id="sumbox" style="margin-top:14px"></div>
+
+    <!-- 역할극 제안 배너 -->
+    <div class="roleplay-banner" style="margin-top:14px">
+      <div class="rp-icon">🎮</div>
+      <div class="rp-title">이 선언, 진짜 상황에서 연습해볼래?</div>
+      <div class="rp-desc">가상 상황에서 직접 말해보며<br/>선언문을 몸으로 익혀봐요!</div>
+    </div>
+    <button class="btn" onclick="goRoleplay()" style="background:linear-gradient(135deg,#E8A020,var(--amber-d))">🎮 역할극 연습하기</button>
+    <button class="btn-ghost" onclick="restart()">처음으로 돌아가기</button>
+  </div>
+
+  <!-- STEP 7: 시나리오 선택 -->
+  <div id="s7" class="screen">
+    <div class="stag" id="s7tag">역할극</div>
+    <div class="stitle" id="s7title">어떤 상황을 연습할까?</div>
+    <div class="sdesc" id="s7desc">선언문을 실천할 수 있는 상황이에요!</div>
+    <div class="sc-grid" id="scGrid"></div>
+    <button class="btn-ghost" onclick="go(6)">← 돌아가기</button>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- STEP 8: 역할극 채팅 (전체화면) -->
+<div id="s8" class="chat-screen">
+  <div class="chat-header" id="chatHeader">
+    <button class="chat-back" onclick="go(7)">← 뒤로</button>
+    <div class="chat-header-info">
+      <div class="chat-header-title" id="chatTitle">역할극 연습</div>
+      <div class="chat-header-sub" id="chatSub"></div>
+    </div>
+    <div id="chatArtistEmoji" style="font-size:24px"></div>
+  </div>
+  <div class="chat-situation" id="chatSituation"></div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div id="chatResolved" style="display:none" class="resolved-box">
+    <div style="font-size:40px">🎉</div>
+    <div style="font-size:17px;font-weight:700;color:var(--amber-dp);margin:8px 0">훌륭하게 해결했어요!</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">선언문대로 실천해줘서 정말 멋있어요!<br/>이 연습이 실제 상황에서도 힘이 될 거예요 💪</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-ghost" style="flex:1;margin:0" onclick="go(7)">다른 상황</button>
+      <button class="btn" style="flex:1;margin:0" onclick="restart()">처음으로</button>
+    </div>
+  </div>
+  <div id="chatInputArea" class="chat-input-area">
+    <div class="chat-hint">💬 직접 말해봐요! (Enter로 전송)</div>
+    <div class="chat-row">
+      <textarea class="chat-ta" id="chatInput" rows="2" placeholder="하고 싶은 말을 써봐요..." onkeydown="handleKey(event)"></textarea>
+      <button class="chat-send" id="chatSendBtn" onclick="sendChat()">전송</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 덕목-예술가 데이터 ────────────────────────────────────
+const ARTIST_DATA = {
+  "긍정":{name:"반 고흐",emoji:"🌻",subtitle:"별빛 속에서 아름다움을 찾은 화가",color:"#C97A00",colorL:"#FFF8E0",colorD:"#7A4800",headerGrad:"linear-gradient(135deg,#E8A000 0%,#C05000 100%)",scenes:[{emoji:"😞🎨",text:`여러분, 혹시 아무리 열심히 해도 아무도 알아주지 않아서 속상했던 적 있나요?\n반 고흐도 그랬어요. 그림을 평생 그렸지만, 살아있는 동안 팔린 그림은 단 <strong>한 장</strong>뿐이었어요.`},{emoji:"🌃✨",text:`하지만 고흐는 밤마다 캔버스를 들고 밖으로 나갔어요. 가난해서 밥도 못 먹는 날이 있었지만, 그는 하늘을 올려다봤어요.`,quote:`"나는 이 슬픔이 영원히 계속되지 않을 거라는 걸 알아. 언젠가 아름다운 날이 올 거야."`},{emoji:"🖼️💛",text:`그렇게 탄생한 그림이 바로 <strong>'별이 빛나는 밤'</strong>이에요. 지금 전 세계 수백만 명이 그 그림 앞에서 눈물을 흘려요.`}],question:`고흐는 아무도 알아주지 않는 힘든 시간에도 별빛 속에서 아름다움을 찾았어요. 나는 힘들 때 아름다움을 발견할 수 있나요?`},
+  "인내":{name:"베토벤",emoji:"🎵",subtitle:"소리 없이 음악을 만든 작곡가",color:"#2255AA",colorL:"#EAF0FF",colorD:"#0A2866",headerGrad:"linear-gradient(135deg,#3366CC 0%,#0A2866 100%)",scenes:[{emoji:"👂❌",text:`음악가에게 귀가 들리지 않는다면 어떤 기분일까요?\n베토벤은 스물여섯 살부터 귀에서 이상한 소리가 났어요. 결국 세상이 완전히 조용해졌어요.`},{emoji:"😢🎹",text:`베토벤은 피아노 앞에 앉아 다리에 귀를 댔어요. 건반을 두드리면 나무가 떨렸고, 그 진동이 온몸으로 전해졌어요.`,quote:`"나는 운명의 목을 조를 것이다! 절대로 포기하지 않겠어!"`},{emoji:"🎼🌟",text:`그렇게 완성한 곡이 '운명 교향곡'이에요. 포기하지 않은 베토벤의 음악은 지금도 전 세계 사람들의 마음을 울리고 있어요.`}],question:`베토벤은 귀가 들리지 않아도 피아노 진동으로 소리를 느끼며 포기하지 않았어요. 나는 포기하고 싶을 때도 앞으로 나아갈 수 있나요?`},
+  "조절":{name:"프리다 칼로",emoji:"🌺",subtitle:"아픔을 그림으로 바꾼 화가",color:"#A0200A",colorL:"#FFF0EE",colorD:"#600000",headerGrad:"linear-gradient(135deg,#CC3322 0%,#881100 100%)",scenes:[{emoji:"🚌💥",text:`열여덟 살 프리다는 큰 사고를 당했어요. 온몸에 심한 부상을 입고 오랫동안 침대에 누워 있어야 했어요.`},{emoji:"🖌️😤",text:`그때 프리다는 붓을 들었어요. 화가 날 때, 슬플 때, 무서울 때 그 감정을 그대로 그림 속에 쏟아냈어요.`,quote:`"나는 꿈을 그리는 게 아니야. 나의 현실을 그리는 거야."`},{emoji:"🌸💪",text:`아픔과 화를 억누르지 않고 자신만의 방법으로 표현한 프리다. <strong>감정을 조절한다는 건 느끼지 않는 게 아니라, 나만의 방법으로 표현하는 것</strong>이에요.`}],question:`프리다는 힘든 감정도 도망치지 않고 그림으로 솔직하게 표현하며 마음을 다스렸어요. 나는 나의 감정을 조절할 수 있나요?`},
+  "효":{name:"신사임당",emoji:"🍃",subtitle:"재능과 효심을 함께 가진 화가",color:"#2A6E2A",colorL:"#EBF5EB",colorD:"#0E3D0E",headerGrad:"linear-gradient(135deg,#3A8C3A 0%,#1A5A1A 100%)",scenes:[{emoji:"🎨📜",text:`신사임당은 조선시대를 살았지만, 그림 실력만큼은 누구도 따라올 수 없었어요. 하지만 신사임당이 가장 소중히 여긴 것은 그림이 아니었어요.`},{emoji:"🏔️😢",text:`결혼 후 강릉에 계신 어머니를 두고 멀리 이사를 가야 했어요. 고개 위에서 고향 쪽을 바라보며 시를 지었어요.`,quote:`"강릉 고향에 계신 홀어머니,\n이 고개 넘으면 더 멀어지네."`},{emoji:"🌿💚",text:`신사임당은 우리에게 말해요. <strong>가족을 향한 마음이야말로 가장 아름다운 작품</strong>이라고요.`}],question:`신사임당은 멀리 떠나면서도 홀로 남겨진 어머니를 생각하며 눈물을 흘렸어요. 나는 가족을 위해 무엇을 하고 있나요?`},
+  "공감":{name:"찰리 채플린",emoji:"🎩",subtitle:"눈물과 웃음을 함께 담은 배우",color:"#444",colorL:"#F2F2F2",colorD:"#111",headerGrad:"linear-gradient(135deg,#555 0%,#111 100%)",scenes:[{emoji:"🏚️😔",text:`어린 시절 찰리 채플린은 집도 없이 런던 거리를 헤매고, 먹을 것을 찾아 쓰레기통을 뒤지기도 했어요.`},{emoji:"🎬❤️",text:`어른이 된 채플린은 가난한 주인공의 영화를 만들었어요. 사람들은 그 모습에 웃다가 갑자기 눈물이 흘렀어요.`,quote:`"웃음은 세상에서 가장 저렴한 명약이에요."`},{emoji:"🎭🤝",text:`채플린이 그 마음을 표현할 수 있었던 건, 자신이 직접 겪었기 때문이에요. <strong>공감이란 상대방의 마음속으로 걸어 들어가는 것</strong>이에요.`}],question:`채플린은 어릴 때 가난했던 경험 덕분에 힘든 사람들의 마음을 깊이 이해했어요. 나는 마음으로 진심으로 상대를 이해할 수 있나요?`},
+  "배려":{name:"샤갈",emoji:"💙",subtitle:"사랑하는 사람을 위해 그림을 그린 화가",color:"#1A4FA0",colorL:"#EBF0FF",colorD:"#0A2860",headerGrad:"linear-gradient(135deg,#2266CC 0%,#0A3388 100%)",scenes:[{emoji:"🏘️💜",text:`마르크 샤갈의 그림에는 항상 하늘을 나는 사람들이 있어요. "사랑하는 사람을 생각하면 마음이 둥실 떠오르거든요."`},{emoji:"🎁🎨",text:`전쟁이 일어나 많은 사람들이 힘들어했을 때, 샤갈은 자신의 그림을 무료로 나눠줬어요.`,quote:`"그림을 그릴 때 나는 사랑하는 사람의 마음에 무엇이 필요한지 생각해요."`},{emoji:"🌈✨",text:`배려는 거창한 게 아니에요. <strong>내가 줄 수 있는 가장 작은 것으로도</strong>, 누군가의 하루를 환하게 만들 수 있어요.`}],question:`샤갈은 항상 보는 사람의 마음에 무엇이 필요한지 생각했어요. 나는 다른 사람을 배려하며 행동하고 있나요?`},
+  "메타인지":{name:"레오나르도 다빈치",emoji:"💡",subtitle:"끊임없이 질문하고 탐구한 천재",color:"#8B2200",colorL:"#FFF0EA",colorD:"#4A0E00",headerGrad:"linear-gradient(135deg,#CC4400 0%,#771100 100%)",scenes:[{emoji:"📓🔍",text:`레오나르도 다빈치는 평생 수천 페이지의 노트를 썼어요. 새가 나는 것을 보면 "왜 날 수 있을까?" 물이 흐르는 것을 보면 "왜 소용돌이칠까?" — 모든 것에 의문을 품었어요.`},{emoji:"🧠✍️",text:`다빈치는 자신이 모르는 것을 부끄러워하지 않았어요. 오히려 "내가 뭘 모르는지 아는 것"이 가장 중요하다고 생각했어요. 그래서 그림, 해부학, 발명, 음악 — 모든 분야를 직접 공부하며 노트에 기록했어요.`,quote:`"배움은 결코 마음을 지치게 하지 않는다."`},{emoji:"🌟🦋",text:`다빈치가 위대했던 건 천재여서가 아니에요. 자신이 아직 모른다는 것을 알고, 끊임없이 탐구했기 때문이에요. <strong>내가 무엇을 알고, 무엇을 모르는지 아는 것</strong> — 그게 진짜 지혜예요.`}],question:`다빈치는 모르는 것을 부끄러워하지 않고 끊임없이 질문하며 탐구했어요. 나는 무엇을 알고 모르는지 솔직하게 알고 있나요?`},
+  "존중":{name:"가우디",emoji:"🏛️",subtitle:"자연과 사람을 존중한 건축가",color:"#5A3A00",colorL:"#FFF5E0",colorD:"#2A1500",headerGrad:"linear-gradient(135deg,#8B6000 0%,#4A3000 100%)",scenes:[{emoji:"🌿🏗️",text:`안토니 가우디가 설계한 건물은 벽이 물결치고, 기둥은 숲속 나무처럼 가지를 뻗어요. "자연에는 직선이 없어요."`},{emoji:"👷‍♂️🤝",text:`가우디는 함께 일하는 사람들을 가족처럼 대했어요. 장인들의 이름을 기억하고, 솜씨를 진심으로 존중했어요.`,quote:`"독창성이란 자연의 근원으로 돌아가는 것이다."`},{emoji:"🌸🦋",text:`꽃 한 송이, 나뭇잎 하나를 소중히 여기는 마음. <strong>존중은 그렇게 시작해요.</strong>`}],question:`가우디는 꽃 한 송이, 나뭇가지 하나도 소중히 여겼어요. 나는 생명 존중을 실천하고 있나요?`},
+  "감사":{name:"바흐",emoji:"🎼",subtitle:"모든 것에 감사하며 음악을 만든 작곡가",color:"#44550A",colorL:"#F0F5E0",colorD:"#1A2200",headerGrad:"linear-gradient(135deg,#667A10 0%,#334400 100%)",scenes:[{emoji:"😟📦",text:`요한 세바스티안 바흐는 열 살도 되기 전에 부모님을 모두 잃었어요. 형은 바흐가 악보 보는 것도 허락하지 않았어요.`},{emoji:"🌙✍️",text:`바흐는 모두가 잠든 밤에 몰래 일어나 달빛 한 줄기만 의지하며 악보를 한 음 한 음 베껴 적었어요.`,quote:`"오직 하느님께 영광을." (바흐가 모든 악보에 적은 말)`},{emoji:"🎵🙏",text:`<strong>감사는 가진 것을 세는 것</strong>이에요. 바흐처럼, 지금 이 순간 내가 가진 것들을 떠올려봐요.`}],question:`바흐는 달빛 아래 몰래 악보를 베끼면서도 음악을 배울 수 있다는 것만으로 감사했어요. 나는 지금에 감사하며 살아가고 있나요?`},
+  "협력":{name:"앤디 워홀",emoji:"🎪",subtitle:"함께 빛나는 공간을 만든 예술가",color:"#880077",colorL:"#FDE8FF",colorD:"#440044",headerGrad:"linear-gradient(135deg,#AA1199 0%,#660066 100%)",scenes:[{emoji:"🏭🎨",text:`앤디 워홀은 뉴욕에 '팩토리'라는 작업실을 만들었어요. 화가, 사진작가, 배우, 가수, 작가 — 전혀 다른 사람들이 한 공간에서 뭔가를 만들었어요.`},{emoji:"💡🤝",text:`워홀은 "나만 빛나는 것"을 원하지 않았어요. 혼자 만들면 한 가지 아이디어. 함께 만들면 상상도 못 한 결과가 나왔어요.`,quote:`"혼자 하는 것보다 함께 하면 훨씬 더 멋진 것이 나와요."`},{emoji:"🌟🌟🌟",text:`<strong>혼자의 1보다, 함께의 10이 훨씬 크고 아름다워요.</strong>`}],question:`앤디 워홀은 서로 다른 사람들의 재능을 모아 세상이 놀랄 예술을 만들었어요. 나는 진정으로 다른 사람과 하나가 될 수 있나요?`},
+  "선택":{name:"하이든",emoji:"🎻",subtitle:"옳은 선택으로 음악 역사를 바꾼 작곡가",color:"#3A3A5A",colorL:"#EEEEFF",colorD:"#111128",headerGrad:"linear-gradient(135deg,#4A4A7A 0%,#1A1A3A 100%)",scenes:[{emoji:"🏰🎼",text:`요제프 하이든은 30년 넘게 귀족 집에서 일하는 궁정 음악가였어요. 매일 귀족이 원하는 음악을 만들어야 했어요. 어떤 날은 하기 싫었지만, 하이든은 항상 최선을 다했어요.`},{emoji:"🤔💭",text:`그런데 하이든은 중요한 선택의 순간이 찾아왔어요. 런던에서 초청이 온 거예요. 60살이 넘은 나이에 낯선 도시로 가는 것 — 두렵고 불안했어요.\n하지만 하이든은 결심했어요. "이 선택을 하지 않으면 평생 후회할 거야."`,quote:`"나는 세상으로부터 단절되어 있었기에, 나만의 방식으로 독창적이 될 수 있었어요."`},{emoji:"🌟🎵",text:`런던에서 하이든은 '놀람 교향곡', '시계 교향곡' 등 최고의 작품들을 만들었어요. 용기 있는 선택이 새로운 세계를 열어준 거예요.\n<strong>선택은 두렵지만, 옳은 선택이 인생을 바꿔요.</strong>`}],question:`하이든은 두려움을 이기고 새로운 선택을 했어요. 나는 관계 속에서 바른 선택을 하고 있나요?`},
+  "시민성":{name:"피카소",emoji:"🎭",subtitle:"붓으로 세상에 맞선 화가",color:"#0A3A6A",colorL:"#E5F0FF",colorD:"#001A3A",headerGrad:"linear-gradient(135deg,#1A5599 0%,#002255 100%)",scenes:[{emoji:"💥😱",text:`1937년, 스페인의 작은 도시 게르니카에 폭탄이 쏟아졌어요. 아무 잘못도 없는 어린이와 어른들이 희생됐어요.\n피카소는 멀리 파리에서 이 소식을 들었어요. 너무 화가 나서 손이 떨렸어요.`},{emoji:"🖌️✊",text:`피카소는 붓을 들었어요. 항의 집회에 나가는 대신, 자신이 가장 잘 할 수 있는 방법으로 목소리를 높였어요.\n단 35일 만에 거대한 그림 '게르니카'를 완성했어요. 전쟁의 공포와 고통이 고스란히 담겼어요.`,quote:`"그림은 아파트를 장식하기 위한 게 아니에요. 적에 맞선 공격과 방어의 무기예요."`},{emoji:"🌍🤝",text:`게르니카는 지금도 전 세계에서 전쟁 반대의 상징으로 쓰여요.\n침묵하지 않고 자신의 방법으로 세상에 목소리를 낸 피카소처럼 — <strong>한 사람의 용기가 세상을 바꿀 수 있어요.</strong>`}],question:`피카소는 불의를 보고 침묵하지 않고 자신의 방법으로 목소리를 높였어요. 나는 행복한 세상을 위해 무엇을 할 수 있나요?`}
+};
+
+// ── 역할극 시나리오 데이터 ────────────────────────────────
+const SCENARIO_DATA = {
+  "긍정":[
+    {id:"g1",emoji:"😔",tag:"포기하고 싶을 때",friendName:"마음속 목소리",friendEmoji:"😞",color:"#C97A00",bg:"#FFF8E0",opening:"이번 시험도 또 틀렸잖아. 나는 아무리 해도 안 돼. 그냥 다 포기하고 싶어."},
+    {id:"g2",emoji:"😒",tag:"부정적인 친구",friendName:"친구",friendEmoji:"🙁",color:"#E08000",bg:"#FFF3D0",opening:"야, 우리 어차피 이번 대회 못 할 거야. 괜히 연습해봤자 소용없어."},
+    {id:"g3",emoji:"🌧️",tag:"안 좋은 일이 생겼을 때",friendName:"짝꿍",friendEmoji:"😤",color:"#AA6000",bg:"#FFF5E0",opening:"오늘 진짜 재수없는 날이야. 아침부터 다 망했어. 기분 너무 나빠."}
+  ],
+  "인내":[
+    {id:"i1",emoji:"📚",tag:"어려운 숙제",friendName:"마음속 목소리",friendEmoji:"😩",color:"#2255AA",bg:"#EAF0FF",opening:"이 수학 문제 진짜 너무 어렵다. 30분째 못 풀고 있어. 그냥 안 하고 싶다."},
+    {id:"i2",emoji:"🎸",tag:"연습이 지겨울 때",friendName:"친구",friendEmoji:"😴",color:"#1144AA",bg:"#E8F0FF",opening:"우리 리코더 연습 이제 그만하자. 너무 지루하고 재미없잖아. 나는 포기할래."},
+    {id:"i3",emoji:"⏳",tag:"오래 기다려야 할 때",friendName:"친구",friendEmoji:"😠",color:"#0A3388",bg:"#EBF2FF",opening:"줄이 왜 이렇게 길어! 짜증나. 그냥 그만 기다리고 싶다."}
+  ],
+  "조절":[
+    {id:"jo1",emoji:"😡",tag:"억울한 상황",friendName:"친구",friendEmoji:"😏",color:"#A0200A",bg:"#FFF0EE",opening:"야, 내가 뭘 잘못했다고 그래? 네가 먼저 시작했잖아! (화가 나서 소리치려는 상황)"},
+    {id:"jo2",emoji:"😤",tag:"화가 폭발할 것 같을 때",friendName:"마음속 목소리",friendEmoji:"🤬",color:"#881100",bg:"#FFF5F5",opening:"너무 화가 나서 터질 것 같아. 소리를 지르거나 뭔가를 던지고 싶은 기분이야."},
+    {id:"jo3",emoji:"😢",tag:"슬픔이 너무 클 때",friendName:"마음속 목소리",friendEmoji:"😭",color:"#660000",bg:"#FFF0F0",opening:"너무 슬프고 속상해서 아무것도 하기 싫어. 이 기분을 어떻게 해야 할지 모르겠어."}
+  ],
+  "효":[
+    {id:"h1",emoji:"🏠",tag:"부모님과 다툴 때",friendName:"마음속 목소리",friendEmoji:"😤",color:"#2A6E2A",bg:"#EBF5EB",opening:"엄마가 또 잔소리해. '공부해라, 핸드폰 그만 봐라'... 진짜 짜증나. 무시하고 싶어."},
+    {id:"h2",emoji:"👴",tag:"어른 존중",friendName:"마음속 목소리",friendEmoji:"🙄",color:"#1A5A1A",bg:"#E8F5E8",opening:"할머니가 또 옛날이야기 하셔. 듣기 싫고 빨리 내 방에 가고 싶어."},
+    {id:"h3",emoji:"🧹",tag:"집안일 돕기",friendName:"동생",friendEmoji:"😜",color:"#0E3D0E",bg:"#F0FAF0",opening:"오빠/언니, 나 청소 하기 싫어! 왜 나만 해야 해? 같이 하자고 했잖아."}
+  ],
+  "공감":[
+    {id:"c1",emoji:"😢",tag:"슬픈 친구 곁에",friendName:"친구",friendEmoji:"😭",color:"#444",bg:"#F5F5F5",opening:"(조용히 혼자 앉아서 울고 있음) ..."},
+    {id:"c2",emoji:"😔",tag:"힘들어하는 친구",friendName:"친구",friendEmoji:"😞",color:"#333",bg:"#F2F2F2",opening:"나 요즘 학교 오기 싫어. 아무도 나랑 안 놀아줘."},
+    {id:"c3",emoji:"😠",tag:"오해받은 친구",friendName:"친구",friendEmoji:"😤",color:"#222",bg:"#F0F0F0",opening:"선생님한테 혼났는데, 내가 한 것도 아닌데. 진짜 억울해 죽겠어."}
+  ],
+  "배려":[
+    {id:"b1",emoji:"📏",tag:"준비물 없는 친구",friendName:"짝꿍",friendEmoji:"😥",color:"#1A4FA0",bg:"#EBF0FF",opening:"(풀이 없어서 당황한 표정으로) 어떡하지... 오늘 미술 시간인데 풀을 깜빡했어."},
+    {id:"b2",emoji:"🧹",tag:"청소 혼자 하는 친구",friendName:"친구",friendEmoji:"😓",color:"#0A3388",bg:"#E8EEFF",opening:"(혼자 청소하고 있음) 휴... 다들 놀러 갔는데 나만 남았네."},
+    {id:"b3",emoji:"🍱",tag:"밥을 못 먹은 친구",friendName:"친구",friendEmoji:"😔",color:"#0A2860",bg:"#EBF0FF",opening:"나 오늘 아침을 못 먹었어. 배고픈데 점심 시간까지 너무 멀다."}
+  ],
+  "메타인지":[
+    {id:"m1",emoji:"🤔",tag:"모르면서 아는 척",friendName:"마음속 목소리",friendEmoji:"😅",color:"#8B2200",bg:"#FFF0EA",opening:"선생님이 질문하셨는데 사실 잘 모르겠어. 그런데 모른다고 하기 창피해서 아는 척하고 싶어."},
+    {id:"m2",emoji:"❌",tag:"실수를 인정 못 할 때",friendName:"친구",friendEmoji:"😠",color:"#771100",bg:"#FFF5F0",opening:"야, 이거 네가 틀렸잖아! (사실 내가 틀렸는데 인정하기 싫은 상황)"},
+    {id:"m3",emoji:"📓",tag:"내가 뭘 모르는지 탐구",friendName:"마음속 목소리",friendEmoji:"😵",color:"#4A0E00",bg:"#FFF0EA",opening:"열심히 공부했는데 왜 자꾸 틀리지? 내가 뭘 잘못하고 있는 건지 모르겠어."}
+  ],
+  "선택":[
+    {id:"se1",emoji:"😤",tag:"친구 압박에 흔들릴 때",friendName:"친구",friendEmoji:"😈",color:"#3A3A5A",bg:"#EEEEFF",opening:"야, 우리 편 할 거야 말 거야? 안 하면 우리랑 못 어울리는 거야."},
+    {id:"se2",emoji:"🤷",tag:"옳고 그름 사이에서",friendName:"친구",friendEmoji:"😏",color:"#2A2A4A",bg:"#F0F0FF",opening:"선생님 몰래 이거 하자. 걸려도 내가 다 책임질게. 어때?"},
+    {id:"se3",emoji:"💭",tag:"갈림길에서 바른 선택",friendName:"마음속 목소리",friendEmoji:"😰",color:"#111128",bg:"#EBEBFF",opening:"지금 친구를 도와야 할 것 같은데, 귀찮아서 그냥 모른 척하고 싶어."}
+  ],
+  "존중":[
+    {id:"z1",emoji:"🗣️",tag:"다른 의견 존중",friendName:"친구",friendEmoji:"🙂",color:"#5A3A00",bg:"#FFF5E0",opening:"나는 우리 모둠 발표를 이렇게 하면 좋겠어. (나와 다른 의견을 냄)"},
+    {id:"z2",emoji:"🌿",tag:"규칙 어기는 친구",friendName:"친구",friendEmoji:"😏",color:"#4A2A00",bg:"#FFF8E8",opening:"쉬는 시간에 운동장 꽃밭 들어가서 놀자. 선생님 없으면 괜찮아."},
+    {id:"z3",emoji:"🤝",tag:"놀림 상황",friendName:"친구들",friendEmoji:"😅",color:"#2A1500",bg:"#FFF5E0",opening:"(다른 친구의 그림을 보며) 야, 이게 뭐야? 너무 못 그렸다ㅋㅋ (같이 웃길 바라고 있음)"}
+  ],
+  "감사":[
+    {id:"ga1",emoji:"🙏",tag:"감사 표현하기",friendName:"마음속 목소리",friendEmoji:"😶",color:"#44550A",bg:"#F0F5E0",opening:"친구가 나를 도와줬는데 고맙다는 말을 못 했어. 이제 어떻게 말해야 할지 모르겠어."},
+    {id:"ga2",emoji:"😒",tag:"불평하고 싶을 때",friendName:"친구",friendEmoji:"😒",color:"#334400",bg:"#F5F8E8",opening:"야, 오늘 급식 진짜 맛없다. 학교 다 별로야. 좋은 게 하나도 없어."},
+    {id:"ga3",emoji:"🌱",tag:"작은 것에 감사하기",friendName:"마음속 목소리",friendEmoji:"😑",color:"#1A2200",bg:"#F0F5E0",opening:"오늘 별로 좋은 일이 없었어. 감사한 게 하나도 없는 것 같아."}
+  ],
+  "협력":[
+    {id:"co1",emoji:"🎨",tag:"모둠 의견 충돌",friendName:"친구",friendEmoji:"😤",color:"#880077",bg:"#FDE8FF",opening:"야, 내 말대로 하자. 네 방법은 별로야. 내 생각이 훨씬 낫거든!"},
+    {id:"co2",emoji:"😤",tag:"혼자 다 하는 친구",friendName:"마음속 목소리",friendEmoji:"😓",color:"#660066",bg:"#FCE8FF",opening:"모둠 친구들이 아무것도 안 해. 내가 다 해야 할 것 같아. 너무 힘들어."},
+    {id:"co3",emoji:"🚫",tag:"혼자 하려는 나",friendName:"친구",friendEmoji:"🙋",color:"#440044",bg:"#FDE0FF",opening:"우리 이거 같이 하자! 내가 이 부분 도와줄게. (도움을 거절하고 싶은 상황)"}
+  ],
+  "시민성":[
+    {id:"si1",emoji:"✊",tag:"불의를 보았을 때",friendName:"마음속 목소리",friendEmoji:"😶",color:"#0A3A6A",bg:"#E5F0FF",opening:"친구가 다른 애한테 심하게 놀림받고 있어. 도와주고 싶은데 나도 같이 놀림받을까봐 무서워."},
+    {id:"si2",emoji:"🌳",tag:"공공장소 질서",friendName:"친구",friendEmoji:"😈",color:"#002255",bg:"#E8F0FF",opening:"공원에서 꽃을 꺾자. 어차피 아무도 안 봐. 규칙 지키는 사람이 바보야."},
+    {id:"si3",emoji:"🗑️",tag:"환경 지키기",friendName:"친구",friendEmoji:"😏",color:"#001A3A",bg:"#E5EEFF",opening:"쓰레기 그냥 여기다 버리자. 멀리 가서 버리기 귀찮잖아."}
+  ]
+};
+
+const VIRTUES = Object.keys(ARTIST_DATA);
+const STARLABELS = ["","조금 자신 없어요 😔","아직 부족해요 😅","보통이에요 🙂","자신 있어요 😊","아주 자신 있어요! 🌟"];
+const artistTone = {
+  "반 고흐":"고흐처럼 열정적이고 감성적인 말투로, 별과 색깔 비유를 넣어서",
+  "베토벤":"베토벤처럼 힘차고 단호한 말투로, 강렬한 격려를 담아서",
+  "프리다 칼로":"프리다처럼 솔직하고 강인한 말투로",
+  "신사임당":"신사임당처럼 따뜻하고 부드러운 어머니 같은 말투로",
+  "찰리 채플린":"채플린처럼 유쾌하고 따뜻한 말투로, 위트 있게",
+  "샤갈":"샤갈처럼 꿈꾸는 듯 따뜻하고 서정적인 말투로",
+  "레오나르도 다빈치":"다빈치처럼 호기심 넘치고 탐구하는 말투로, 관찰과 질문을 강조하며",
+  "하이든":"하이든처럼 차분하고 지혜로운 말투로, 선택의 중요성을 담아서",
+  "피카소":"피카소처럼 강렬하고 직설적인 말투로, 용기있게 목소리를 내라고 격려하며",
+  "가우디":"가우디처럼 자연을 사랑하고 꼼꼼한 말투로",
+  "바흐":"바흐처럼 겸손하고 진지한 말투로",
+  "앤디 워홀":"앤디 워홀처럼 쿨하고 개성 있는 말투로",
+  "미켈란젤로":"미켈란젤로처럼 묵직하고 진지한 말투로",
+  "위고":"위고처럼 따뜻하고 문학적인 말투로"
+};
+
+let S = {
+  key:"AIzaSyB-MvhXCvERhlmkVMu_lIbflW3l2IwQZYY",
+  name:"", virtue:"", decl:"", stars:0, newDecl:"",
+  scenario:null, chatHistory:[], chatLoading:false, chatResolved:false
+};
+
+// ── 초기화 ──────────────────────────────────────────────
+window.onload = () => {
+  const g = document.getElementById("vgrid");
+  VIRTUES.forEach(v => {
+    const b = document.createElement("button");
+    b.className = "vtag"; b.textContent = v;
+    b.onclick = () => {
+      document.querySelectorAll(".vtag").forEach(x => x.classList.remove("sel"));
+      b.classList.add("sel");
+      S.virtue = v;
+      updateArtistCard(v);
+      document.getElementById("s3title").textContent = `'${v}' 선언문을 써봐요 ✏️`;
+      // 힌트 영역 초기화
+      document.getElementById("hintArea").style.display = "none";
+      document.getElementById("hintContent").style.display = "none";
+      document.getElementById("hintContent").innerHTML = "";
+      document.getElementById("hintLoading").style.display = "block";
+      document.getElementById("hintLoading").innerHTML = `힌트를 만들고 있어요<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>`;
+      document.getElementById("hintBtn").disabled = false;
+      chk1();
+    };
+    g.appendChild(b);
+  });
+
+  const sr = document.getElementById("starrow");
+  for (let i = 1; i <= 5; i++) {
+    const s = document.createElement("button");
+    s.className = "star"; s.textContent = "★";
+    s.onclick = () => {
+      S.stars = i;
+      document.querySelectorAll(".star").forEach((el, idx) => el.classList.toggle("lit", idx < i));
+      document.getElementById("starlabel").textContent = STARLABELS[i];
+      document.getElementById("btn4").disabled = false;
+    };
+    sr.appendChild(s);
+  }
+};
+
+function updateArtistCard(virtue) {
+  const a = ARTIST_DATA[virtue];
+  if (!a) return;
+  const card = document.getElementById("artistCard");
+  card.style.setProperty("--artist-color", a.color);
+  card.style.setProperty("--artist-bg", a.colorL);
+  card.style.setProperty("--artist-dark", a.colorD);
+  card.style.border = `1px solid ${a.color}44`;
+  document.getElementById("artistHeader").style.background = a.headerGrad;
+  document.getElementById("artistEmoji").textContent = a.emoji;
+  document.getElementById("artistVirtueLabel").textContent = `✦ ${virtue} ✦`;
+  document.getElementById("artistNameLabel").textContent = a.name;
+  document.getElementById("artistSubtitle").textContent = a.subtitle;
+  const body = document.getElementById("storyBody");
+  body.innerHTML = a.scenes.map((sc, i) => {
+    const quoteHtml = sc.quote ? `<div class="scene-quote">${sc.quote.replace(/\n/g,"<br>")}</div>` : "";
+    return `<div class="story-scene" style="background:${i%2===0?"#fff":a.colorL+"88"}">
+      <div class="scene-emoji-row">${sc.emoji}</div>
+      <div class="scene-text">${sc.text.replace(/\n/g,"<br>")}</div>${quoteHtml}</div>`;
+  }).join("");
+  const qbox = document.getElementById("questionBox");
+  qbox.style.background = a.colorL;
+  document.getElementById("questionLabel").style.color = a.colorD;
+  document.getElementById("questionText").style.color = a.colorD;
+  document.getElementById("questionText").textContent = a.question;
+  document.getElementById("sigEmoji").textContent = a.emoji;
+  document.getElementById("sigName").textContent = `${a.name}의 피드백`;
+  document.getElementById("s2title").textContent = `${a.name}의 이야기 ${a.emoji}`;
+}
+
+// ── 화면 전환 ──────────────────────────────────────────
+function show(id) {
+  // 채팅 화면 별도 처리
+  const chatEl = document.getElementById("s8");
+  chatEl.classList.remove("on");
+  document.querySelector(".wrap").style.display = "block";
+  if (id === "s8") {
+    document.querySelector(".wrap").style.display = "none";
+    chatEl.classList.add("on");
+    return;
+  }
+  ["s1","s2","s3","s4","s5","s6","s7"].forEach(s =>
+    document.getElementById(s).classList.toggle("on", s === id));
+}
+function go(n) {
+  show("s" + n);
+  window.scrollTo(0,0);
+}
+
+function cnt(inId, outId) { document.getElementById(outId).textContent = document.getElementById(inId).value.length; }
+function autoH(el) { el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; }
+function chk1() {
+  S.name = document.getElementById("nameIn").value.trim();
+  document.getElementById("btn1").disabled = !S.name || !S.virtue;
+}
+function chk3() {
+  document.getElementById("btn3").disabled = document.getElementById("declIn").value.trim().length < 5;
+}
+
+// ── 선언문 힌트 ───────────────────────────────────────
+async function getHint() {
+  const artist = ARTIST_DATA[S.virtue];
+  if (!artist) return;
+  document.getElementById("hintArea").style.display = "block";
+  document.getElementById("hintLoading").style.display = "block";
+  document.getElementById("hintContent").style.display = "none";
+  document.getElementById("hintBtn").disabled = true;
+  document.getElementById("hintArtistEmoji").textContent = artist.emoji;
+  document.getElementById("hintArtistName").textContent = artist.name;
+
+  const prompt = `너는 ${artist.name}이야. 초등학교 5학년 학생이 "${S.virtue}" 덕목 선언문을 쓰려고 하는데 막막해하고 있어.
+
+선언문을 직접 알려주지 말고, 학생이 스스로 생각할 수 있도록 질문 3개를 짧게 던져줘.
+
+조건:
+- 각 질문은 "이럴 때 넌 어떻게 할 거야?", "이런 상황에서 넌?" 같은 구체적인 생활 속 상황 질문
+- 학생이 그 질문에 답하면 자연스럽게 선언문이 나오도록 유도
+- 번호로 나열 (1. 2. 3.)
+- 질문 앞에 ${artist.name}의 말투로 짧은 격려 한 마디
+- "그걸 선언문으로 쓰면 돼!" 같은 마무리 한 줄 추가
+- 초등학생이 쉽게 이해할 수 있는 말로
+
+덕목: ${S.virtue}
+예술가: ${artist.name}`;
+
+  try {
+    const res = await callGemini([{role:"user", parts:[{text:prompt}]}]);
+    document.getElementById("hintLoading").style.display = "none";
+    document.getElementById("hintContent").style.display = "block";
+    document.getElementById("hintContent").innerHTML =
+      `<div style="font-size:14px;color:#555;line-height:1.9;white-space:pre-wrap;">${res}</div>
+       <div style="margin-top:12px;font-size:12px;color:#aaa;">💬 이 질문들에 답하다 보면 선언문이 써질 거예요!</div>`;
+  } catch(e) {
+    document.getElementById("hintLoading").style.display = "block";
+    document.getElementById("hintLoading").innerHTML = `<span style="color:#c00;font-size:13px;">오류가 났어요. 다시 눌러봐요.</span>`;
+    document.getElementById("hintBtn").disabled = false;
+  }
+}
+
+
+function parseFB(text) {
+  const re = /\[([^\]]+)\]/g;
+  let m, arr = [];
+  while ((m = re.exec(text)) !== null) arr.push({label:m[1], end:m.index+m[0].length, idx:m.index});
+  if (arr.length < 2) return [{type:"praise", icon:"🌟", label:"피드백", content:text}];
+  return arr.map((cur, i) => {
+    const content = text.slice(cur.end, i+1 < arr.length ? arr[i+1].idx : text.length).trim();
+    const l = cur.label;
+    let type = "praise";
+    if (l.includes("더") || l.includes("실천") || l.includes("보완")) type = "improve";
+    if (l.includes("선언") || l.includes("힌트") || l.includes("고쳐")) type = "hint";
+    const iconMatch = l.match(/\p{Emoji_Presentation}/u);
+    const icon = iconMatch ? iconMatch[0] : "•";
+    return {type, icon, label:l.replace(/\p{Emoji_Presentation}/gu,"").trim(), content};
+  });
+}
+
+async function getFeedback() {
+  S.decl = document.getElementById("declIn").value.trim();
+  const artist = ARTIST_DATA[S.virtue];
+  show("s5");
+  const msgs = [`${artist.name}이(가) 편지를 쓰고 있어요...`, "따뜻한 말을 고르고 있어요...", "거의 다 됐어요! 💌"];
+  let mi = 0;
+  const lmsg = document.getElementById("lmsg");
+  const iv = setInterval(() => { mi = (mi+1) % msgs.length; lmsg.textContent = msgs[mi]; }, 1800);
+  const tone = artistTone[artist.name] || "따뜻하고 친근한 말투로";
+  const prompt = `너는 ${artist.name}이야. 초등학교 5학년 아이 ${S.name}에게 ${S.virtue} 덕목 선언문에 대해 피드백을 써줄 거야.
+${tone} 반말로 피드백해줘.
+
+아래 세 부분으로 나눠서 대괄호 제목으로 시작해줘.
+
+[🌟 잘 썼어!]
+${S.name}의 선언문에서 좋은 점을 ${artist.name}의 입장에서 구체적으로 칭찬해줘. 2문장.
+
+[💙 이렇게 하면 더 잘 실천할 수 있어]
+별점 ${S.stars}점을 참고해서, 실제로 잘 실천할 수 있는 방법 2~3가지. 번호로.
+
+[💝 선언문 고쳐보기 힌트]
+더 구체적이고 힘찬 선언문이 되도록 짧게 방향을 알려줘. "이렇게 써봐:" 하고 예시 1개.
+
+이름: ${S.name} / 덕목: ${S.virtue} / 선언문: "${S.decl}" / 자신감: ${S.stars}점/5점`;
+
+  try {
+    const res = await callGemini([{role:"user",parts:[{text:prompt}]}]);
+    clearInterval(iv);
+    const secs = parseFB(res);
+    let html = `<div class="vbadge">🌱 ${S.virtue} 덕목</div>`;
+    secs.forEach(s => {
+      html += `<div class="fbcard ${s.type}"><div class="fbhead ${s.type}">${s.icon} ${s.label}</div><div class="fbbody ${s.type}">${s.content}</div></div>`;
+    });
+    document.getElementById("fbwrap").innerHTML = html;
+    document.getElementById("loadArea").style.display = "none";
+    document.getElementById("fbArea").style.display = "block";
+  } catch(e) {
+    clearInterval(iv);
+    document.getElementById("loadArea").innerHTML = `<p style="text-align:center;color:#A32D2D;font-size:15px;padding:20px">앗, 오류가 생겼어요 😥<br><small>${e.message}</small></p><button class="btn-ghost" style="margin-top:12px" onclick="go(4)">← 돌아가기</button>`;
+  }
+}
+
+function finish() {
+  const nd = document.getElementById("heartDecl").value.trim();
+  if (!nd) { alert("하트 안에 새 선언문을 써봐요! 💝"); return; }
+  S.newDecl = nd;
+  const artist = ARTIST_DATA[S.virtue];
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`;
+  document.getElementById("doneTitle").textContent = `${S.name}, 정말 잘했어요! 🎉`;
+  document.getElementById("doneSub").textContent = `${S.virtue} 덕목 선언문을 완성했어요`;
+  document.getElementById("cardEmoji").textContent = artist.emoji;
+  document.getElementById("cardVirtue").textContent = `✦ ${S.virtue} ✦`;
+  document.getElementById("cardArtist").textContent = `${artist.name}과(와) 함께`;
+  document.getElementById("cardName").textContent = `${S.name}의 선언문`;
+  document.getElementById("cardDecl").textContent = S.newDecl;
+  document.getElementById("cardDate").textContent = dateStr;
+  const stars = "★".repeat(S.stars) + "☆".repeat(5-S.stars);
+  document.getElementById("sumbox").innerHTML = `
+    <div class="sumrow"><span class="sl">이름</span><span class="sv">${S.name}</span></div>
+    <div class="sumrow"><span class="sl">덕목</span><span class="sv">${S.virtue}</span></div>
+    <div class="sumrow"><span class="sl">함께한 예술가</span><span class="sv">${artist.emoji} ${artist.name}</span></div>
+    <div class="sumrow"><span class="sl">자신감</span><span class="sv"><span class="stars-sm">${stars}</span> ${S.stars}점</span></div>
+    <div class="sumrow"><span class="sl">처음 선언문</span><span class="sv">${S.decl}</span></div>
+    <div class="sumrow new-decl-row"><span class="sl">새 선언문 💝</span><span class="sv">${S.newDecl}</span></div>`;
+  show("s6");
+}
+
+// ── 역할극 ────────────────────────────────────────────
+function goRoleplay() {
+  const scenarios = SCENARIO_DATA[S.virtue] || [];
+  const artist = ARTIST_DATA[S.virtue];
+  document.getElementById("s7tag").textContent = `역할극 · ${S.virtue}`;
+  document.getElementById("s7title").textContent = `어떤 상황을 연습할까?`;
+  document.getElementById("s7desc").textContent = `${artist.name}처럼 ${S.virtue}을(를) 실천해봐요!`;
+  const grid = document.getElementById("scGrid");
+  grid.innerHTML = scenarios.map(sc => `
+    <button class="sc-btn" style="border-color:${sc.color};background:${sc.bg};" onclick="startChat('${sc.id}')">
+      <div class="sc-btn-emoji">${sc.emoji}</div>
+      <div class="sc-btn-tag" style="color:${sc.color}">${sc.tag}</div>
+      <div class="sc-btn-title">${sc.friendName}과(와)의 상황</div>
+    </button>`).join("");
+  go(7);
+}
+
+function startChat(scId) {
+  const sc = SCENARIO_DATA[S.virtue].find(s => s.id === scId);
+  if (!sc) return;
+  S.scenario = sc;
+  S.chatHistory = [];
+  S.chatResolved = false;
+  const artist = ARTIST_DATA[S.virtue];
+
+  // 헤더 설정
+  document.getElementById("chatHeader").style.background = sc.color;
+  document.getElementById("chatTitle").textContent = sc.tag + " 연습";
+  document.getElementById("chatSub").textContent = `${S.virtue} 덕목 · ${artist.name}이(가) 함께해요`;
+  document.getElementById("chatArtistEmoji").textContent = artist.emoji;
+
+  // 상황 박스
+  const sit = document.getElementById("chatSituation");
+  sit.style.borderColor = sc.color;
+  sit.style.background = sc.bg;
+  sit.innerHTML = `<strong style="color:${sc.color}">📌 상황:</strong> 직접 말로 대응해봐!`;
+
+  // 메시지 초기화
+  const msgs = document.getElementById("chatMessages");
+  msgs.innerHTML = "";
+  document.getElementById("chatResolved").style.display = "none";
+  document.getElementById("chatInputArea").style.display = "block";
+  document.getElementById("chatInput").value = "";
+
+  // 첫 메시지
+  appendFriendMsg(sc.opening);
+  show("s8");
+}
+
+function appendFriendMsg(text) {
+  const sc = S.scenario;
+  const msgs = document.getElementById("chatMessages");
+  const div = document.createElement("div");
+  div.className = "friend-row";
+  div.innerHTML = `
+    <div class="friend-avatar">${sc.friendEmoji}</div>
+    <div>
+      <div class="friend-name-lbl">${sc.friendName}</div>
+      <div class="friend-bubble">${text}</div>
+    </div>`;
+  msgs.appendChild(div);
+  scrollChat();
+}
+
+function appendUserMsg(text) {
+  const msgs = document.getElementById("chatMessages");
+  const div = document.createElement("div");
+  div.className = "user-row";
+  div.innerHTML = `<div class="user-bubble">${text}</div>`;
+  msgs.appendChild(div);
+  scrollChat();
+}
+
+function appendArtistFb(friendText, guideText, tip, score) {
+  appendFriendMsg(friendText);
+  const artist = ARTIST_DATA[S.virtue];
+  const msgs = document.getElementById("chatMessages");
+  const div = document.createElement("div");
+  const stars = [1,2,3,4,5].map(n=>`<span style="color:${n<=score?"#FAC775":"#DDD"};font-size:13px">★</span>`).join("");
+  div.className = "artist-fb-box";
+  div.innerHTML = `
+    <div class="artist-fb-top">
+      <span style="font-size:20px">${artist.emoji}</span>
+      <span style="font-weight:700;font-size:13px;color:var(--amber-dp);flex:1">${artist.name}의 한마디</span>
+      <div class="artist-fb-stars">${stars}</div>
+    </div>
+    <div class="artist-fb-text">${guideText}</div>
+    ${tip ? `<div class="tip-pill">💡 ${tip}</div>` : ""}`;
+  msgs.appendChild(div);
+  scrollChat();
+}
+
+function appendLoading() {
+  const msgs = document.getElementById("chatMessages");
+  const div = document.createElement("div");
+  div.id = "chatLoading";
+  div.className = "friend-row";
+  div.innerHTML = `<div class="friend-avatar">${S.scenario.friendEmoji}</div>
+    <div class="friend-bubble"><span class="loading-dots"><span>●</span><span>●</span><span>●</span></span></div>`;
+  msgs.appendChild(div);
+  scrollChat();
+}
+
+function removeLoading() {
+  const el = document.getElementById("chatLoading");
+  if (el) el.remove();
+}
+
+function scrollChat() {
+  const msgs = document.getElementById("chatMessages");
+  setTimeout(() => msgs.scrollTop = msgs.scrollHeight, 50);
+}
+
+function handleKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+async function sendChat() {
+  if (S.chatLoading || S.chatResolved) return;
+  const inp = document.getElementById("chatInput");
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = "";
+  appendUserMsg(text);
+  S.chatHistory.push({role:"user", parts:[{text}]});
+  S.chatLoading = true;
+  document.getElementById("chatSendBtn").disabled = true;
+  appendLoading();
+
+  const sc = S.scenario;
+  const artist = ARTIST_DATA[S.virtue];
+  const tone = artistTone[artist.name] || "따뜻하게";
+  const VIRTUE_GUIDE = {
+    "존중": {
+      good: ["상대 의견을 인정하는 말","좋다/맞다/그렇게 하자 등 수용","경청하는 태도 표현","다름을 인정하는 말","생명이나 자연을 소중히 여기는 말","규칙을 지키자는 말"],
+      bad: ["무시하거나 비하하는 말","내 방식만 옳다고 강요","상대 의견 거부","규칙 어기기에 동조","놀리거나 깎아내리기"]
+    },
+    "배려": {
+      good: ["도움을 먼저 제안","상대 상황에 공감","같이 해주겠다는 말","필요한 것을 챙겨주겠다는 말","위로하는 말"],
+      bad: ["모른 척하거나 외면","귀찮아하는 태도","차갑게 대하기","혼자 알아서 하라는 말","도움 거부"]
+    },
+    "감사": {
+      good: ["감사한 점을 찾아 말하기","긍정적인 면 발견","고마운 마음 표현","작은 것도 소중히 여기기","불평 대신 좋은 점 말하기"],
+      bad: ["불평하거나 투덜거리기","감사할 게 없다고 단정","부정적으로만 바라보기","불만에 동조하기"]
+    },
+    "공감": {
+      good: ["상대 감정을 인정하는 말","그랬구나/힘들겠다 등 공감 표현","함께 있어주겠다는 말","감정을 먼저 들어주기","편 들어주기"],
+      bad: ["바로 조언부터 하기","별거 아니라고 축소","무시하거나 화제 바꾸기","네 탓이라고 하기"]
+    },
+    "협력": {
+      good: ["같이 하자는 제안","역할 나누기 제안","상대 도움 받아들이기","내 의견과 상대 의견 합치기","함께 해결하자는 말"],
+      bad: ["혼자 다 하려는 태도","상대 배제하기","내 방법만 고집","도움 거부","상대 능력 무시"]
+    },
+    "효": {
+      good: ["가족에게 따뜻하게 대하기","도움 제안","이해하려는 태도","사랑 표현","걱정해주기"],
+      bad: ["무시하거나 짜증 내기","반항하는 말","차갑게 대하기","가족 말을 무시"]
+    },
+    "긍정": {
+      good: ["힘든 상황에서 좋은 점 찾기","희망적인 말","포기하지 말자는 격려","함께 해보자는 말","작은 것도 감사하기"],
+      bad: ["같이 포기하자고 하기","부정적 말에 동조","희망을 꺾는 말","어차피 안 된다는 말"]
+    },
+    "인내": {
+      good: ["조금만 더 해보자는 말","포기하지 말자는 격려","어려워도 계속하겠다는 의지","버티는 게 의미 있다는 말"],
+      bad: ["같이 포기하자는 말","그만두자고 부추기기","노력이 소용없다는 말","쉽게 포기 권유"]
+    },
+    "조절": {
+      good: ["감정을 말로 표현하려는 시도","잠깐 멈추고 생각하기","화를 다스리려는 태도","감정을 건강하게 표현하기"],
+      bad: ["감정 폭발에 동조","더 화나게 부추기기","폭력적 행동 권유","같이 화내기"]
+    },
+    "메타인지": {
+      good: ["모르는 것 솔직하게 인정","실수를 받아들이기","다시 생각해보려는 태도","왜 틀렸는지 돌아보기"],
+      bad: ["모르면서 아는 척","실수를 남 탓으로 돌리기","틀렸는데 계속 우기기","반성 없이 넘어가기"]
+    },
+    "선택": {
+      good: ["스스로 옳고 그름 판단","압박에도 바른 선택","나쁜 것 거절하기","올바른 선택을 용기 있게 말하기"],
+      bad: ["나쁜 행동에 동조","압박에 굴복","잘못인 줄 알면서 따라 하기","남이 하니까 나도 한다는 말"]
+    },
+    "시민성": {
+      good: ["규칙 지키자는 말","공공질서 존중","불의에 용기 있게 말하기","약한 사람 돕기","환경 보호하기"],
+      bad: ["규칙 어기기에 동조","불의 외면하기","환경 파괴 행동 따라 하기","침묵으로 동조"]
+    }
+  };
+  const vg = VIRTUE_GUIDE[S.virtue] || {good:["덕목을 실천하는 말"], bad:["덕목에 반하는 말"]};
+
+  const systemText = `너는 초등학교 5학년 갈등 해결 연습 앱의 평가자야.
+역할 1: 상황 속 "${sc.friendName}" 캐릭터
+역할 2: ${artist.name} 캐릭터로 학생 말을 평가하고 피드백
+
+【상황】${sc.tag}
+【첫 상황】${sc.opening}
+【덕목】${S.virtue}
+
+━━━ 평가 절차 (순서대로 판단) ━━━
+
+STEP 1. 학생이 한 말의 핵심 의도를 파악해.
+- 단어 하나에 집중하지 말고, 전체 맥락과 의도를 봐.
+- 예: "그래 그 의견도 정말 좋다" → 핵심 의도 = 상대 의견 수용 → 존중 실천
+
+STEP 2. 아래 기준과 대조해.
+✅ ${S.virtue} 덕목을 실천하는 말 유형:
+${vg.good.map(g => `- ${g}`).join('\n')}
+
+❌ ${S.virtue} 덕목에 반하는 말 유형:
+${vg.bad.map(b => `- ${b}`).join('\n')}
+
+STEP 3. 점수 결정
+- 5점: 덕목을 정확히 실천하는 말. 진심 있고 구체적
+- 4점: 덕목 방향은 맞지만 조금 더 구체적이면 좋을 것
+- 3점: 의도는 좋으나 표현이 어색하거나 약함
+- 2점: 덕목과 맞지 않는 말. 방향 수정 필요
+- 1점: 덕목에 완전히 반하는 말
+
+STEP 4. resolved 판단
+- 학생이 4~5점짜리 말을 했고, 상황이 긍정적으로 마무리됐으면 true
+- 3점 이하이거나 상황이 아직 진행 중이면 false
+
+━━━ 응답 형식 ━━━
+반드시 아래 JSON만 응답 (마크다운 없이, 한국어로):
+{
+  "friendReaction": "${sc.friendName}의 반응 (1~2문장. 학생 말의 점수에 맞게: 4~5점이면 고마워하거나 수긍, 2~3점이면 아직 해결 안 됨, 1점이면 상처받거나 실망)",
+  "guideMessage": "${artist.name}의 피드백 (2~3문장. ${tone}. 4~5점: 진심 칭찬. 2~3점: 방향은 맞는데 이렇게 해보면 어떨까. 1점: 이 말은 ${S.virtue}과 거리가 있어, 이렇게 해봐. 선언문 절대 언급 금지)",
+  "resolved": true 또는 false,
+  "score": 1~5 사이 정수,
+  "tip": "${S.virtue} 덕목 실천 핵심 팁 한 줄"
+}`;
+
+  // 시스템 메시지를 첫 user 메시지에 포함
+  const historyWithSystem = [{role:"user", parts:[{text: systemText + "\n\n---\n첫 상황: " + sc.opening}]}, {role:"model", parts:[{text:'{"friendReaction":"' + sc.opening + '","guideMessage":"자, 어떻게 대응할 거야?","resolved":false,"score":3,"tip":""}'}]}, ...S.chatHistory];
+
+  try {
+    const raw = await callGemini(historyWithSystem);
+    const cleaned = raw.replace(/```json|```/g,"").trim();
+    const parsed = JSON.parse(cleaned);
+    removeLoading();
+    S.chatHistory.push({role:"model", parts:[{text: parsed.friendReaction}]});
+    appendArtistFb(parsed.friendReaction, parsed.guideMessage, parsed.tip, parsed.score);
+    if (parsed.resolved) {
+      S.chatResolved = true;
+      document.getElementById("chatResolved").style.display = "block";
+      document.getElementById("chatInputArea").style.display = "none";
+    }
+  } catch(e) {
+    removeLoading();
+    appendArtistFb("...", "앗, 잠깐 오류가 났어요! 다시 말해봐요.", "", 3);
+  }
+  S.chatLoading = false;
+  document.getElementById("chatSendBtn").disabled = false;
+}
+
+// ── Gemini API ────────────────────────────────────────
+async function callGemini(contents) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${S.key}`;
+  const res = await fetch(url, {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      contents,
+      generationConfig:{
+        maxOutputTokens:900,
+        temperature:0.8,
+        thinkingConfig:{ thinkingBudget:0 }
+      }
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+}
+
+// ── 카드 저장 ─────────────────────────────────────────
+function saveCard() {
+  const artist = ARTIST_DATA[S.virtue];
+  const canvas = document.createElement("canvas");
+  const W=800, H=520; canvas.width=W; canvas.height=H;
+  const ctx = canvas.getContext("2d");
+  const grad = ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0,"#FFF8E7"); grad.addColorStop(1,"#FFE8C0");
+  ctx.fillStyle=grad; roundRect(ctx,0,0,W,H,24); ctx.fill();
+  ctx.strokeStyle="#FAC775"; ctx.lineWidth=3; roundRect(ctx,4,4,W-8,H-8,22); ctx.stroke();
+  ctx.fillStyle="rgba(250,199,117,0.18)";
+  ctx.beginPath(); ctx.arc(W-60,60,70,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(60,H-60,50,0,Math.PI*2); ctx.fill();
+  ctx.font="52px serif"; ctx.textAlign="center"; ctx.fillText(artist.emoji,W/2,90);
+  ctx.font="bold 18px sans-serif"; ctx.fillStyle="#854F0B"; ctx.fillText(`✦ ${S.virtue} ✦`,W/2,130);
+  ctx.font="15px sans-serif"; ctx.fillStyle="#BA7517"; ctx.fillText(`${artist.name}과(와) 함께`,W/2,158);
+  ctx.font="bold 17px sans-serif"; ctx.fillStyle="#633806"; ctx.fillText(`${S.name}의 선언문`,W/2,198);
+  ctx.strokeStyle="#FAC775"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(W/2-120,214); ctx.lineTo(W/2+120,214); ctx.stroke();
+  ctx.font="bold 22px serif"; ctx.fillStyle="#2C2C2A";
+  const lines=wrapText(ctx,S.newDecl,W-120,28);
+  const lineH=38; const totalH=lines.length*lineH; let ty=250+(H-300-totalH)/2;
+  lines.forEach(line=>{ctx.fillText(line,W/2,ty);ty+=lineH;});
+  const today=new Date(); ctx.font="13px sans-serif"; ctx.fillStyle="#888780";
+  ctx.fillText(`${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`,W/2,H-28);
+  const a=document.createElement("a"); a.download=`${S.name}_${S.virtue}_선언문.png`;
+  a.href=canvas.toDataURL("image/png"); a.click();
+}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function wrapText(ctx,text,maxW){const words=text.split("");const lines=[];let cur="";for(let ch of words){const test=cur+ch;if(ctx.measureText(test).width>maxW&&cur){lines.push(cur);cur=ch;}else{cur=test;}}if(cur)lines.push(cur);return lines;}
+
+// ── 리셋 ─────────────────────────────────────────────
+function restart() {
+  S = {key:S.key, name:"", virtue:"", decl:"", stars:0, newDecl:"", scenario:null, chatHistory:[], chatLoading:false, chatResolved:false};
+  ["nameIn","declIn","heartDecl","questionAnswer"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  ["dc","hc"].forEach(id=>document.getElementById(id).textContent="0");
+  document.getElementById("starlabel").textContent="별을 눌러봐요";
+  document.querySelectorAll(".star").forEach(s=>s.classList.remove("lit"));
+  document.querySelectorAll(".vtag").forEach(s=>s.classList.remove("sel"));
+  document.getElementById("btn4").disabled=true;
+  document.getElementById("loadArea").style.display="block";
+  document.getElementById("loadArea").innerHTML=`<div class="lmsg" id="lmsg">피드백을 만들고 있어요...</div><div class="ldots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>`;
+  document.getElementById("fbArea").style.display="none";
+  show("s1");
+}
+</script>
+</body>
+</html>
